@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colombia's Three-Way War — A Presidential Election Forecast</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1a1a;--paper:#faf9f6;--cream:#f0ede6;
+  --left:#c0392b;--right:#1a5276;--center:#d4a017;
+  --outsider:#6c3483;--muted:#8a8478;--rule:#d4cfc6;
+  --green:#1e8449;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+::selection{background:var(--left);color:#fff}
+body{font-family:'Lora',serif;background:var(--paper);color:var(--ink);font-size:18px;line-height:1.85;-webkit-font-smoothing:antialiased}
+
+/* MASTHEAD */
+.masthead{text-align:center;padding:14px 20px;border-bottom:2px solid var(--ink);position:relative}
+.masthead::after{content:'';display:block;height:1px;background:var(--ink);margin-top:3px}
+.mh-title{font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,40px);font-weight:900;letter-spacing:-0.01em}
+.mh-sub{font-family:'IBM Plex Sans',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+
+/* HERO */
+.hero{max-width:800px;margin:0 auto;padding:56px 24px 36px;text-align:center}
+.hero-kicker{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--left);margin-bottom:18px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5.5vw,50px);font-weight:900;line-height:1.18;margin-bottom:22px}
+.hero-deck{font-size:19px;line-height:1.7;color:#444;max-width:640px;margin:0 auto 28px}
+.hero-meta{font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:var(--muted);border-top:1px solid var(--rule);padding-top:12px;display:inline-block}
+.hero-meta span{margin:0 8px}
+
+/* BIG NUMBERS */
+.bignums{display:flex;gap:0;max-width:960px;margin:48px auto;padding:0 24px}
+.bn{flex:1;text-align:center;padding:32px 12px;border-right:1px solid var(--rule)}
+.bn:last-child{border-right:none}
+.bn-val{font-family:'Playfair Display',serif;font-size:clamp(38px,5.5vw,58px);font-weight:900;line-height:1;margin-bottom:4px}
+.bn-lbl{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+
+/* BODY */
+.body{max-width:680px;margin:0 auto;padding:0 24px}
+.body p{margin-bottom:22px}
+.body p:first-of-type::first-letter{font-family:'Playfair Display',serif;font-size:58px;float:left;line-height:.85;margin:6px 10px 0 -4px;font-weight:900;color:var(--left)}
+
+/* SECTIONS */
+.sec{max-width:680px;margin:56px auto 28px;padding:0 24px}
+.sec-n{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--left);letter-spacing:1px;display:block;margin-bottom:6px}
+.sec h2{font-family:'Playfair Display',serif;font-size:clamp(22px,3.8vw,32px);font-weight:900;line-height:1.3}
+.sec .sub{font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--muted);margin-top:6px}
+
+/* VIZ */
+.viz{max-width:960px;margin:44px auto;padding:0 24px}
+.viz-t{font-family:'IBM Plex Sans',sans-serif;font-size:15px;font-weight:700;margin-bottom:3px}
+.viz-s{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);margin-bottom:18px}
+.viz-src{font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--muted);margin-top:10px}
+
+/* BARS */
+.bar-row{display:grid;grid-template-columns:150px 1fr 56px;align-items:center;gap:10px;margin-bottom:12px}
+.bar-lbl{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;text-align:right}
+.bar-track{height:28px;background:var(--cream);border-radius:2px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;position:absolute;left:0;top:0;width:0}
+.bar-fill.anim{transition:width 2s cubic-bezier(.16,.85,.45,1)}
+.bar-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;text-align:left;opacity:0;transition:opacity .5s ease 1.8s}
+.bar-val.show{opacity:1}
+
+/* POLL TRACKER */
+.poll-timeline{position:relative;padding:30px 0 10px}
+.poll-round{margin-bottom:30px;padding:20px;background:#fff;border:1px solid var(--rule);border-radius:4px}
+.poll-round-title{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;color:var(--muted)}
+
+/* DATA TABLE */
+.dtable{width:100%;border-collapse:collapse;font-family:'IBM Plex Sans',sans-serif;font-size:13px}
+.dtable th{text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:10px 10px;border-bottom:2px solid var(--ink)}
+.dtable td{padding:10px;border-bottom:1px solid var(--rule)}
+.dtable tr:hover{background:var(--cream)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.hl{font-weight:700}
+
+/* ANNOTATION */
+.ann{background:var(--cream);border-left:3px solid var(--center);padding:18px 22px;max-width:680px;margin:32px auto;font-size:15px;line-height:1.7}
+.ann strong{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--center);display:block;margin-bottom:5px}
+
+/* PULL QUOTE */
+.pq{max-width:680px;margin:48px auto;padding:0 24px 0 56px;position:relative}
+.pq::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:3px;background:var(--left)}
+.pq blockquote{font-family:'Playfair Display',serif;font-size:21px;font-style:italic;line-height:1.5;color:#333}
+.pq cite{display:block;font-family:'IBM Plex Sans',sans-serif;font-style:normal;font-size:12px;color:var(--muted);margin-top:8px}
+
+/* CANDIDATE CARDS */
+.cand-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;max-width:960px;margin:40px auto;padding:0 24px}
+.cand{background:#fff;padding:24px;border:1px solid var(--rule);position:relative;overflow:hidden;transition:transform .2s}
+.cand:hover{transform:translateY(-2px)}
+.cand-pct{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;line-height:1;margin-bottom:2px}
+.cand-name{font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px}
+.cand-party{font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:10px}
+.cand-desc{font-size:13px;line-height:1.6;color:#555}
+.cand-bar{position:absolute;bottom:0;left:0;height:4px;transition:width 1.8s cubic-bezier(.25,.46,.45,1);width:0}
+
+/* SCENARIO CARDS */
+.scen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;max-width:960px;margin:40px auto;padding:0 24px}
+.scen{background:#fff;padding:26px;border:1px solid var(--rule);position:relative;overflow:hidden}
+.scen-prob{font-family:'Playfair Display',serif;font-size:44px;font-weight:900;line-height:1;margin-bottom:3px}
+.scen-name{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:10px}
+.scen-desc{font-size:13px;line-height:1.6;color:#555}
+.scen-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--rule)}
+.scen-bar{position:absolute;bottom:0;left:0;height:4px;transition:width 1.8s cubic-bezier(.25,.46,.45,1);width:0}
+
+/* FOOTER */
+.footer{max-width:680px;margin:76px auto 0;padding:28px 24px 72px;border-top:2px solid var(--ink)}
+.footer::before{content:'';display:block;height:1px;background:var(--ink);margin-bottom:28px;margin-top:3px}
+.footer-lbl{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.footer-txt{font-size:13px;line-height:1.7;color:#666}
+
+/* SCROLL */
+.fi{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.fi.vis{opacity:1;transform:translateY(0)}
+
+/* PROGRESS */
+.prog{position:fixed;top:0;left:0;height:3px;background:var(--left);z-index:100;transition:width .1s linear;width:0}
+
+@media(max-width:640px){
+  body{font-size:16px}
+  .bignums{flex-direction:column}
+  .bn{border-right:none;border-bottom:1px solid var(--rule);padding:20px 12px}
+  .bn:last-child{border-bottom:none}
+  .bar-row{grid-template-columns:100px 1fr 48px;gap:6px}
+  .bar-lbl{font-size:10px}
+  .cand-grid,.scen-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+
+<header class="masthead">
+<div class="mh-title">The New York Editorial</div>
+<div class="mh-sub">Data &amp; Analysis &middot; February 12, 2026</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+<div class="hero-kicker">Colombia Election Forecast</div>
+<h1>The Tiger, the Senator, and the Mathematician: Colombia's Three-Way War for the Presidency</h1>
+<p class="hero-deck">With 107 pre-candidates whittled to a handful, an assassinated senator, a Bukele-style outsider surging on the right, and Petro's heir leading on the left, Colombia's May 31 election is the most volatile and consequential race in Latin America this year. We analyze every available poll and four decades of electoral history.</p>
+<div class="hero-meta">Quantitative Analysis Desk<span>&middot;</span>Feb. 12, 2026<span>&middot;</span>14 min read</div>
+</section>
+
+<!-- BIG NUMBERS -->
+<div class="bignums fi">
+<div class="bn"><div class="bn-val" style="color:var(--right)">32.1%</div><div class="bn-lbl">De la Espriella (Right)</div></div>
+<div class="bn"><div class="bn-val" style="color:var(--left)">31.4%</div><div class="bn-lbl">Cepeda (Left)</div></div>
+<div class="bn"><div class="bn-val" style="color:var(--center)">7.6%</div><div class="bn-lbl">Fajardo (Center)</div></div>
+<div class="bn"><div class="bn-val" style="color:var(--muted)">40M+</div><div class="bn-lbl">Registered Voters</div></div>
+</div>
+
+<!-- INTRO -->
+<div class="body fi">
+<p>Colombia is heading into the most unpredictable election in its modern democratic history. On May 31, over 40 million voters will choose their next president in a race where the two frontrunners — a far-right lawyer nicknamed "El Tigre" and a left-wing senator who spent decades fighting ex-President Álvaro Uribe in court — are now locked in a statistical tie. Between them stands a fractured center, a congressional election on March 8 that will reshape the landscape, and a country convulsed by record coca production, an assassination that shook the political class, a 23% minimum-wage hike, and a U.S. administration that has decertified Colombia as a drug-war ally. No candidate is expected to win 50% in the first round. A runoff on June 21 is nearly certain. And in that runoff, the mathematics of coalition-building — who inherits the center's voters — will determine whether Colombia continues its first-ever leftist government or swings hard to the right.</p>
+</div>
+
+<!-- SECTION 1: THE FIELD -->
+<div class="sec fi">
+<span class="sec-n">01</span>
+<h2>The Candidates: From 107 to a Handful</h2>
+<div class="sub">Colombia began with a record field. These are the contenders who survived.</div>
+</div>
+
+<div class="cand-grid fi" id="candGrid">
+<div class="cand">
+<div class="cand-pct" style="color:var(--right)">32.1%</div>
+<div class="cand-name">Abelardo de la Espriella</div>
+<div class="cand-party">Defensores de la Patria &middot; Far Right</div>
+<div class="cand-desc">Criminal defense lawyer, 52. Self-styled "Colombian Bukele." Anti-corruption, hardline security, coca eradication via fumigation. Models himself on Milei, Bukele, and Trump. Surged from obscurity to frontrunner in 6 months. Skipping March 8 primary — going straight to first round. Highest poll momentum of any candidate.</div>
+<div class="cand-bar" data-width="32.1" style="background:var(--right)"></div>
+</div>
+<div class="cand">
+<div class="cand-pct" style="color:var(--left)">31.4%</div>
+<div class="cand-name">Iván Cepeda</div>
+<div class="cand-party">Pacto Histórico &middot; Left</div>
+<div class="cand-desc">Senator, 63. Human rights activist. Won Pacto Histórico internal consultation in October 2025 with ~3 million votes. Pitches himself as continuation of Petro's project. Barred from March 8 coalition primary by Electoral Council — goes directly to first round. Carries high rejection rate (24%) but leads among youth.</div>
+<div class="cand-bar" data-width="31.4" style="background:var(--left)"></div>
+</div>
+<div class="cand">
+<div class="cand-pct" style="color:var(--center)">7.6%</div>
+<div class="cand-name">Sergio Fajardo</div>
+<div class="cand-party">Independent &middot; Center</div>
+<div class="cand-desc">Mathematician, 69. Former Mayor of Medellín and Governor of Antioquia. Third consecutive presidential run. Declined to join centrist primary — going straight to first round. Low rejection rate but has never cracked 10% in 2026 polling. Got 4.2% in 2022 first round. The perennial centrist hope.</div>
+<div class="cand-bar" data-width="7.6" style="background:var(--center)"></div>
+</div>
+<div class="cand">
+<div class="cand-pct" style="color:var(--outsider)">~5%</div>
+<div class="cand-name">Primary Winners (TBD March 8)</div>
+<div class="cand-party">Right &amp; Center Coalitions</div>
+<div class="cand-desc">Three primaries on March 8 will produce additional candidates. Right-wing "Gran Consulta" features Paloma Valencia (19%), Juan Manuel Galán, Vicky Dávila. Left "Pacto Amplio" features Roy Barreras. Center "Consultation for Solutions" features Claudia López. Fragmentation could persist or consolidate.</div>
+<div class="cand-bar" data-width="5" style="background:var(--outsider)"></div>
+</div>
+</div>
+
+<div class="ann fi">
+<strong>Critical Context: The Bloomberg Finding</strong>
+A February 7 AtlasIntel poll for Semana magazine shows De la Espriella at 32.1% and Cepeda at 31.4% — a <em>statistical tie</em> within the margin of error. This represents a dramatic shift from the November Invamer poll where Cepeda led 31.9% to De la Espriella's 18.2%. In three months, the right-wing outsider has nearly doubled his support while Cepeda has plateaued. A Centro Nacional de Consultoría runoff simulation gives De la Espriella a 44.2% to 34.9% advantage over Cepeda in a hypothetical second round — a 9.3-point gap.
+</div>
+
+<!-- SECTION 2: POLLING -->
+<div class="sec fi">
+<span class="sec-n">02</span>
+<h2>The Polling Arc: How We Got Here</h2>
+<div class="sub">Four major polls tell the story of a race that inverted itself in 90 days</div>
+</div>
+
+<div class="viz fi">
+<div class="viz-t">First-Round Voting Intention — Top Three Candidates</div>
+<div class="viz-s">Excluding undecided and won't-vote. Multiple pollsters, Nov. 2025 – Feb. 2026.</div>
+
+<div class="poll-round">
+<div class="poll-round-title">Cifras y Conceptos — Nov. 5, 2025 (first poll after blackout lifted)</div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--left)">Cepeda</div><div class="bar-track"><div class="bar-fill" data-width="48" style="background:var(--left)"></div></div><div class="bar-val" style="color:var(--left)">24%</div></div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--center)">Fajardo</div><div class="bar-track"><div class="bar-fill" data-width="48" style="background:var(--center)"></div></div><div class="bar-val" style="color:var(--center)">24%</div></div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--right)">De la Espriella</div><div class="bar-track"><div class="bar-fill" data-width="34" style="background:var(--right)"></div></div><div class="bar-val" style="color:var(--right)">17%</div></div>
+</div>
+
+<div class="poll-round">
+<div class="poll-round-title">Invamer (Caracol/Blu Radio) — Nov. 28, 2025</div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--left)">Cepeda</div><div class="bar-track"><div class="bar-fill" data-width="64" style="background:var(--left)"></div></div><div class="bar-val" style="color:var(--left)">31.9%</div></div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--right)">De la Espriella</div><div class="bar-track"><div class="bar-fill" data-width="36" style="background:var(--right)"></div></div><div class="bar-val" style="color:var(--right)">18.2%</div></div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--center)">Fajardo</div><div class="bar-track"><div class="bar-fill" data-width="17" style="background:var(--center)"></div></div><div class="bar-val" style="color:var(--center)">8.5%</div></div>
+</div>
+
+<div class="poll-round">
+<div class="poll-round-title">AtlasIntel / Semana — Jan. 2026</div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--right)">De la Espriella</div><div class="bar-track"><div class="bar-fill" data-width="56" style="background:var(--right)"></div></div><div class="bar-val" style="color:var(--right)">28%</div></div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--left)">Cepeda</div><div class="bar-track"><div class="bar-fill" data-width="53" style="background:var(--left)"></div></div><div class="bar-val" style="color:var(--left)">26.5%</div></div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--center)">Fajardo</div><div class="bar-track"><div class="bar-fill" data-width="19" style="background:var(--center)"></div></div><div class="bar-val" style="color:var(--center)">9.4%</div></div>
+</div>
+
+<div class="poll-round">
+<div class="poll-round-title">AtlasIntel / Semana — Feb. 7, 2026 (latest)</div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--right)">De la Espriella</div><div class="bar-track"><div class="bar-fill" data-width="64" style="background:var(--right)"></div></div><div class="bar-val" style="color:var(--right)">32.1%</div></div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--left)">Cepeda</div><div class="bar-track"><div class="bar-fill" data-width="63" style="background:var(--left)"></div></div><div class="bar-val" style="color:var(--left)">31.4%</div></div>
+<div class="bar-row"><div class="bar-lbl" style="color:var(--center)">Fajardo</div><div class="bar-track"><div class="bar-fill" data-width="15" style="background:var(--center)"></div></div><div class="bar-val" style="color:var(--center)">7.6%</div></div>
+</div>
+
+<div class="viz-src">Sources: Cifras y Conceptos (n=3,361, MoE ±3%), Invamer (n=3,800, MoE ±1.81%), AtlasIntel/Semana (n=4,520+). Figures exclude undecided voters.</div>
+</div>
+
+<div class="body fi">
+<p>The trajectory is unmistakable. In November, Cepeda led by 14 points. By February, the race is a dead heat. De la Espriella's rise mirrors the pattern of right-wing outsiders across Latin America — Bukele in El Salvador, Milei in Argentina — who consolidate anti-establishment sentiment through social media, hardline security rhetoric, and a deliberate rejection of traditional party structures. The "Defender of the Homeland" kits he ships to supporters are a marketing stroke borrowed directly from the Milei playbook.</p>
+<p>But the numbers hide a critical asymmetry. Cepeda's support has a <em>floor</em> — the ~24% of Colombians who identify as left-leaning plus Petro's still-solid 38% approval base. De la Espriella's support has a <em>ceiling problem</em> in a runoff: he is the most polarizing candidate in the field, and a Centro Nacional de Consultoría poll found that in a runoff against Fajardo, De la Espriella wins by only 37.9% to 23.2% — meaning nearly 39% of voters reject both. The question is whether antipathy toward the left is strong enough to push centrist voters into the arms of a far-right populist, or whether they abstain.</p>
+</div>
+
+<!-- SECTION 3: 2022 BASELINE -->
+<div class="sec fi">
+<span class="sec-n">03</span>
+<h2>The 2022 Baseline: How Petro Won — and What It Tells Us</h2>
+<div class="sub">Colombia's first leftist president was elected on a wave of anti-establishment fury. Can it happen again?</div>
+</div>
+
+<div class="viz fi">
+<div class="viz-t">2022 Presidential Election Results</div>
+<div class="viz-s">First round (May 29) and runoff (June 19). Turnout: 54.9% R1, 58.2% R2.</div>
+<div style="overflow-x:auto">
+<table class="dtable">
+<thead><tr><th>Round</th><th>Candidate</th><th>Ideology</th><th>Votes</th><th>%</th></tr></thead>
+<tbody>
+<tr><td class="mono">R1</td><td class="hl" style="color:var(--left)">Gustavo Petro</td><td>Left</td><td class="mono">8,527,768</td><td class="mono hl">40.3%</td></tr>
+<tr><td class="mono">R1</td><td>Rodolfo Hernández</td><td>Outsider / Right</td><td class="mono">5,953,209</td><td class="mono">28.2%</td></tr>
+<tr><td class="mono">R1</td><td>Federico Gutiérrez</td><td>Center-Right</td><td class="mono">5,058,010</td><td class="mono">23.9%</td></tr>
+<tr><td class="mono">R1</td><td>Sergio Fajardo</td><td>Center</td><td class="mono">888,585</td><td class="mono">4.2%</td></tr>
+<tr><td class="mono">R1</td><td>Others</td><td>Various</td><td class="mono">~700,000</td><td class="mono">3.4%</td></tr>
+<tr style="border-top:2px solid var(--ink)"><td class="mono">R2</td><td class="hl" style="color:var(--left)">Gustavo Petro ✓</td><td>Left</td><td class="mono">11,281,013</td><td class="mono hl">50.4%</td></tr>
+<tr><td class="mono">R2</td><td>Rodolfo Hernández</td><td>Outsider / Right</td><td class="mono">10,580,412</td><td class="mono">47.3%</td></tr>
+</tbody>
+</table>
+</div>
+<div class="viz-src">Source: Registraduría Nacional de Colombia; EU Election Observation Mission 2022</div>
+</div>
+
+<div class="body fi">
+<p>The 2022 results contain three lessons for 2026. First, the left has a <em>proven ceiling of ~40%</em> in the first round and ~50% in a runoff — Petro couldn't exceed it even in a wave year. Cepeda, who lacks Petro's personal charisma and carries the burden of Petro's scandals, will likely perform below this ceiling. Second, the "outsider" lane — Hernández's 28% came from nowhere, fueled by anti-corruption TikTok campaigning — is exactly the lane De la Espriella is now occupying, but with far more organizational sophistication. Third, the center collapses under polarization. Fajardo went from 4 million votes in 2018 to 888,000 in 2022 — an 80% decline. If 2026 is another polarized binary, Fajardo will be squeezed again.</p>
+<p>The critical arithmetic: in the 2022 runoff, Petro gained ~2.75 million votes from the first round. Hernández gained ~4.6 million — absorbing almost the entire Gutiérrez + Fajardo vote. The right-of-center consolidation in a runoff is <em>more efficient</em> than the left's. This is why the CNC runoff simulation shows De la Espriella beating Cepeda by 9.3 points: anti-Petro sentiment is a more powerful unifier than pro-Petro enthusiasm.</p>
+</div>
+
+<div class="pq fi">
+<blockquote>"Fifty percent of respondents said they would prefer a candidate opposed to Petro. The math is clear: the anti-Petro vote is larger than the pro-Petro vote. The question is whether it consolidates behind one person."</blockquote>
+<cite>— Invamer poll analysis, November 2025</cite>
+</div>
+
+<!-- SECTION 4: THE VARIABLES -->
+<div class="sec fi">
+<span class="sec-n">04</span>
+<h2>Seven Variables That Will Shape May 31</h2>
+</div>
+
+<div class="body fi">
+<p><strong style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;">1. March 8: The Bellwether.</strong> Congressional elections and three presidential primaries will reveal real voter mobilization. The right-wing "Gran Consulta" will choose between Paloma Valencia, Juan Manuel Galán, Vicky Dávila, and others. If Valencia wins big, it consolidates the traditional Uribista base behind a candidate who could either challenge or ally with De la Espriella. If the consultation draws low turnout, it signals that the right's energy is already with El Tigre.</p>
+
+<p><strong style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;">2. Uribe's Senate gambit.</strong> Former President Álvaro Uribe — the most consequential Colombian politician of the 21st century — placed himself at position 25 on the Centro Democrático Senate list. His party would need to win at least 25 seats for him to return. This is mathematically difficult but symbolically enormous. If Uribe returns to the Senate, it energizes the right and could create a kingmaker dynamic. If he fails, it signals the twilight of Uribismo as an organizational force.</p>
+
+<p><strong style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;">3. Security and political violence.</strong> The 2025 assassination of Senator Miguel Uribe Turbay — shot at a rally, dying weeks later — was a seismic event. Security is now the top voter concern alongside corruption. Record coca production (262,000 hectares in 2024), armed group violence in Arauca and Meta, and Petro's struggling "Total Peace" program have created a "seguridad democrática" nostalgia that benefits hardliners like De la Espriella, who promises fumigation and "democratic authority."</p>
+
+<p><strong style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;">4. The U.S. factor.</strong> The Trump administration decertified Colombia as a drug-war partner, sanctioned Petro's family for alleged organized-crime links, and engaged in public confrontations. An Invamer poll found 78–81% of Colombians say their next president must have good relations with Washington. This massively disadvantages Cepeda, who is seen as Petro's heir and carries the association with anti-American rhetoric. De la Espriella, who openly admires Trump, benefits.</p>
+
+<p><strong style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;">5. The economy.</strong> Colombia suspended its fiscal rule through 2027. The 23% minimum-wage hike in December 2025 raises inflation fears. GDP growth is below the 21st-century average. Nearly 58% of the workforce is informal. Morgan Stanley analysts warn the next administration will "inherit a difficult fiscal situation." Bread-and-butter concerns could override ideological loyalty.</p>
+
+<p><strong style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;">6. Petro's approval — floor or ceiling?</strong> At 35.7% (AtlasIntel, January 2026), Petro's approval is stable but not strong. Analyst Sergio Guzmán argues this isn't about policy but identity: "This is the first government that looks like the country" — with Afro-Colombians and marginalized communities in senior positions. That symbolic power gives the left a durable base, but the 53.5% disapproval is the gravitational force pushing the race rightward.</p>
+
+<p><strong style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;">7. The center's existential dilemma.</strong> Fajardo, Claudia López, Juan Manuel Galán, and others collectively poll at 15–20% — enough to be kingmakers in a runoff but not enough to make the runoff. If the center fragments (likely), its voters become the prize in the second round. In 2022, center voters broke overwhelmingly for the right in the runoff. If this pattern repeats, De la Espriella wins. If Cepeda can build a "broad front" — as he has called for — the math gets competitive.</p>
+</div>
+
+<!-- SECTION 5: SCENARIO ANALYSIS -->
+<div class="sec fi">
+<span class="sec-n">05</span>
+<h2>Five Scenarios for May 31 — and June 21</h2>
+<div class="sub">No candidate will win outright. The runoff is the real election.</div>
+</div>
+
+<div class="scen-grid fi" id="scenGrid">
+<div class="scen">
+<div class="scen-prob" style="color:var(--right)">35%</div>
+<div class="scen-name" style="color:var(--right)">De la Espriella Wins Runoff</div>
+<div class="scen-desc">De la Espriella and Cepeda make the runoff. Center voters, faced with a Petro-continuity vs. Bukele-style choice, break right — as they did in 2022. De la Espriella wins ~55–45. Colombia swings hard right. U.S. relations reset overnight.</div>
+<div class="scen-meta">R1: Espriella ~30%, Cepeda ~28% → R2: Espriella ~54%, Cepeda ~46%</div>
+<div class="scen-bar" data-width="35" style="background:var(--right)"></div>
+</div>
+<div class="scen">
+<div class="scen-prob" style="color:var(--left)">25%</div>
+<div class="scen-name" style="color:var(--left)">Cepeda Wins Runoff</div>
+<div class="scen-desc">Cepeda consolidates left + part of center through a "broad front" strategy, positioning himself as the democratic alternative to far-right populism. Turnout among young and Afro-Colombian voters surges. Narrow ~51–49 win. Petro's project continues.</div>
+<div class="scen-meta">R1: Cepeda ~31%, Espriella ~29% → R2: Cepeda ~51%, Espriella ~49%</div>
+<div class="scen-bar" data-width="25" style="background:var(--left)"></div>
+</div>
+<div class="scen">
+<div class="scen-prob" style="color:var(--center)">20%</div>
+<div class="scen-name" style="color:var(--center)">Center Candidate Makes Runoff</div>
+<div class="scen-desc">A centrist (Fajardo, or a March 8 primary winner) surges late, squeezes into the runoff against either frontrunner. This happened with Hernández in 2022 — the "dark horse" scenario. A centrist vs. left runoff would be the center's best shot; vs. right, the center likely loses.</div>
+<div class="scen-meta">R1: Center ~24%, Front ~28% → R2: Depends on matchup</div>
+<div class="scen-bar" data-width="20" style="background:var(--center)"></div>
+</div>
+<div class="scen">
+<div class="scen-prob" style="color:var(--outsider)">15%</div>
+<div class="scen-name" style="color:var(--outsider)">Right-Wing Consolidation Reshuffles Field</div>
+<div class="scen-desc">March 8 primary produces a strong establishment-right candidate (Valencia or Galán) who absorbs De la Espriella's support OR forces him into an alliance. A unified right could win the first round with 40%+, approaching the threshold to avoid a runoff. This requires coordination that has eluded the right so far.</div>
+<div class="scen-meta">R1: Unified Right ~38–42%, Cepeda ~28–31%</div>
+<div class="scen-bar" data-width="15" style="background:var(--outsider)"></div>
+</div>
+<div class="scen">
+<div class="scen-prob" style="color:var(--green)">5%</div>
+<div class="scen-name" style="color:var(--green)">Wildcard — External Shock</div>
+<div class="scen-desc">A Venezuela crisis (Maduro's fall aftermath), a U.S. military action affecting Colombia, a major security incident, or a Petro constitutional-assembly push disrupts the race fundamentally. Colombia's history is defined by late-breaking shocks — the 2002 FARC collapse of peace talks, the 2018 FARC peace deal referendum, the 2021 protests.</div>
+<div class="scen-meta">Outcome: Unpredictable; favors whoever looks strongest on security</div>
+<div class="scen-bar" data-width="5" style="background:var(--green)"></div>
+</div>
+</div>
+
+<!-- SECTION 6: THE MATH -->
+<div class="sec fi">
+<span class="sec-n">06</span>
+<h2>The Runoff Math: Why the Right Is Favored</h2>
+</div>
+
+<div class="body fi">
+<p>The structural arithmetic of a Colombian runoff currently favors the right, for three interlocking reasons.</p>
+<p>First, the <em>anti-Petro majority</em>. Petro's disapproval is 53.5%. A November Invamer poll found 50% of voters want a candidate opposed to Petro. Cepeda is running explicitly as Petro's heir. In a binary runoff, the "anyone but Petro's party" vote is larger than the "continue the project" vote.</p>
+<p>Second, <em>center-voter behavior in 2022</em>. When Fajardo's 888,000 first-round voters and Gutiérrez's 5 million had to choose between Petro and Hernández, the overwhelming majority went right. Hernández gained 4.6 million votes between rounds while Petro gained 2.75 million. If this pattern repeats — center breaks right — De la Espriella's runoff advantage is decisive.</p>
+<p>Third, <em>the rejection ceiling</em>. Cepeda's "would never vote for" rate is 23.9% — among the highest in the field. De la Espriella is polarizing too, but in a two-person race, the candidate with the lower rejection ceiling typically wins because they have more room to grow.</p>
+<p>However, the left has counterarguments. Petro's <em>floor</em> of ~38% is larger than any single right-wing candidate's base. If Cepeda can hold that floor and peel off 12–13% from the center — positioning himself as the democratic moderate against far-right populism — the math works. The fear of a Bukele-style strongman could push moderate voters <em>left</em> rather than right, especially urban professionals and women. This is Cepeda's strategic bet.</p>
+</div>
+
+<div class="ann fi">
+<strong>The Key Number: 2.82 Million</strong>
+That's how many Venezuelan migrants and refugees Colombia hosts — the largest such population in Latin America. Immigration policy, border security, and the economic strain of integration are live campaign issues. De la Espriella has made hardline immigration rhetoric a centerpiece. This mirrors the nativist turn across Latin America and the U.S. and could mobilize voters who feel economically displaced.
+</div>
+
+<!-- SECTION 7: MARCH 8 -->
+<div class="sec fi">
+<span class="sec-n">07</span>
+<h2>March 8: The Election Before the Election</h2>
+<div class="sub">Congressional elections and three primaries will reshape the presidential race</div>
+</div>
+
+<div class="body fi">
+<p>Before May 31, Colombia votes on March 8 for its entire Congress — 108 Senators and 188 House members — and simultaneously holds three presidential coalition primaries. This is the real starting gun.</p>
+<p>What to watch: the right-wing "Gran Consulta por Colombia" primary (18.7% of voters say they'll participate) will choose among Paloma Valencia, Juan Carlos Pinzón, Vicky Dávila, Aníbal Gaviria, and Juan Daniel Oviedo. Valencia leads among likely participants at 19.1%. A strong showing by her could either consolidate the right behind Centro Democrático or, if she underperforms, leave De la Espriella as the unchallenged right-wing standard-bearer.</p>
+<p>The leftist "Pacto Amplio" primary (29.8% plan to participate) features Roy Barreras as the leading contender. Since Cepeda was barred from participating, this consultation's winner becomes either his ally or his rival on the left — a critical dynamic.</p>
+<p>Congressional results will also reveal whether Uribe's gambit succeeds, whether the Pacto Histórico can hold its caucus, and how the proliferation of coalition lists (six in the Senate alone, up from one in 2018) fragments the landscape. The political machines — the <em>maquinarias</em> — are strongest in congressional races, where clientelistic networks and vote-buying are endemic. These machines will have less influence in the presidential race, where the <em>voto de opinión</em> (independent, ideological vote) is more dominant.</p>
+</div>
+
+<!-- SECTION 8: BOTTOM LINE -->
+<div class="sec fi">
+<span class="sec-n">08</span>
+<h2>The Bottom Line</h2>
+</div>
+
+<div class="body fi">
+<p>Our assessment: Colombia's 2026 presidential election is a genuine three-way race that will almost certainly produce a runoff. In that runoff, the structural advantages — anti-Petro majority, center-voter behavior, rejection ceilings — currently favor the right. We assign a <strong>35% probability</strong> to a De la Espriella presidency, <strong>25%</strong> to Cepeda, <strong>20%</strong> to a centrist making the runoff and reshuffling the math, and <strong>20%</strong> to consolidation or wildcard scenarios.</p>
+<p>But Colombia defies forecasts. In 2022, Rodolfo Hernández rose from 3% to the runoff in six weeks. In 2018, Petro went from perennial also-ran to 8.5 million first-round votes. In 2002, Álvaro Uribe surged from third place to a first-round victory. Colombian presidential races are defined by late movement, and the March 8 primaries will reshape the field in ways no current model can fully anticipate.</p>
+<p>What we <em>can</em> say with confidence: the next president of Colombia will govern a country with record cocaine production, 2.82 million Venezuelan migrants, a suspended fiscal rule, armed group violence in its countryside, a fractured relationship with Washington, and a population where 37% lean right, 24% lean left, and the rest are up for grabs. Whoever inherits the Casa de Nariño on August 7 will need not just a mandate but a miracle.</p>
+</div>
+
+<div class="pq fi">
+<blockquote>"The left must build coalitions beyond ideology. The center must consolidate behind one name. The right cannot campaign solely on anti-Petro sentiment — it needs a compelling agenda. And everyone is running out of time."</blockquote>
+<cite>— Sergio Guzmán, Colombia Risk Analysis, October 2025</cite>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+<div class="footer-lbl">Data &amp; Research</div>
+<p class="footer-txt" style="margin-bottom:18px">Underlying data, statistical tables, and probability assessments compiled by <strong>Muhammad Rakibul Islam (Rakib)</strong>. Raw dataset available under MIT License — free to use, share, and build upon with attribution.</p>
+<div class="footer-lbl">Methodology &amp; Sources</div>
+<p class="footer-txt">This analysis synthesizes: AtlasIntel/Semana polls (February 7, 2026 &amp; January 2026; n=4,520+); Invamer/Caracol/Blu Radio poll (November 28, 2025; n=3,800, MoE ±1.81%, 95% CL, 148 municipalities); Cifras y Conceptos/Caracol Radio "Polimetrica" poll (November 5, 2025; n=3,361, MoE ±3%); Centro Nacional de Consultoría/Semana runoff simulation (March 2025); Guarumo/Ecoanalitica poll (February 2025); Atlas Intel Petro approval (January 5–8, 2026; n=4,520); 2022 election results from Registraduría Nacional de Colombia and EU Election Observation Mission; AS/COA poll tracker and election preview; Americas Quarterly campaign analysis; Inter-American Dialogue event transcript (October 2025); Colombia Risk Analysis commentary; Bloomberg reporting (February 7, 2026); The City Paper Bogotá candidate analysis; Rio Times political reporting; GlobalSecurity.org Colombia 2026 profile; Congress.gov CRS report R48287; Colombia Reports party analysis; colombiapolelxn.substack.com congressional election series. Historical election data from IFES Election Guide and Registraduría. Scenario probabilities are editorial assessments based on polling trends, historical runoff patterns (2002–2022), structural factors (anti-incumbent sentiment, center-voter behavior, rejection ceilings), and expert analysis. All data reflects publicly available information as of February 12, 2026.</p>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100+'%'});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');
+e.target.querySelectorAll('.bar-fill').forEach((b,i)=>{setTimeout(()=>{b.classList.add('anim');b.style.width=b.dataset.width+'%'},i*180)});
+e.target.querySelectorAll('.bar-val').forEach((v,i)=>{setTimeout(()=>v.classList.add('show'),i*180+500)});
+e.target.querySelectorAll('.cand-bar,.scen-bar').forEach(b=>{b.style.width=b.dataset.width+'%'})}})},{threshold:.12});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
